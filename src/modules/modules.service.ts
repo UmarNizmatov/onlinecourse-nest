@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
-import Module from 'module';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Module } from './entities/module.entity';
 
 @Injectable()
 export class ModulesService {

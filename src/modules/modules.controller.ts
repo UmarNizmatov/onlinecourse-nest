@@ -37,7 +37,11 @@ export class ModulesController {
   findOne(@Param('id') id: string) {
     return this.modulesService.findOne(id);
   }
-
+  @Get(':moduleId/lessons')
+  async findOneLessons(@Param('moduleId') id: string) {
+    const data = await this.modulesService.findOne(id);
+    return data.lessons;
+  }
   @Patch(':id')
   @Roles(user_role.admin, user_role.teacher)
   update(@Param('id') id: string, @Body() updateModuleDto: UpdateModuleDto) {
