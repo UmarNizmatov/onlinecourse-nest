@@ -6,27 +6,20 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Req,
 } from '@nestjs/common';
 import { StudentCoursesService } from './student_courses.service';
-import { CreateStudentCourseDto } from './dto/create-student_course.dto';
 import { UpdateStudentCourseDto } from './dto/update-student_course.dto';
-import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
 import type { Request } from 'express';
 import { CreateEnrollmentDto } from './dto/enrollment.dto';
 
 @Controller('student-courses')
-@UseGuards(JwtAccessGuard)
 export class StudentCoursesController {
   constructor(private readonly studentCoursesService: StudentCoursesService) {}
 
   @Post()
-  create(
-    @Body() CreateEnrollmentDto: CreateEnrollmentDto,
-    @Req() req: Request,
-  ) {
-    return this.studentCoursesService.create(CreateEnrollmentDto, req.user!.id);
+  create(@Body() createEnrollmentDto: CreateEnrollmentDto, @Req() req: Request) {
+    return this.studentCoursesService.create(createEnrollmentDto, req.user!.id);
   }
 
   @Get()
@@ -40,10 +33,7 @@ export class StudentCoursesController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateStudentCourseDto: UpdateStudentCourseDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateStudentCourseDto: UpdateStudentCourseDto) {
     return this.studentCoursesService.update(id, updateStudentCourseDto);
   }
 

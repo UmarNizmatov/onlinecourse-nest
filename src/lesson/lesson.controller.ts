@@ -13,7 +13,6 @@ import {
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { user_role } from 'src/auth/entities/role.enum';
@@ -21,7 +20,6 @@ import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/fi
 import 'multer';
 
 @Controller('lesson')
-@UseGuards(JwtAccessGuard)
 export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 
@@ -33,7 +31,10 @@ export class LessonController {
     @Body() createLessonDto: CreateLessonDto,
     @UploadedFile() video: Express.Multer.File,
   ) {
-    return this.lessonService.create({ ...createLessonDto, videoUrl: video.path });
+    return this.lessonService.create({
+      ...createLessonDto,
+      videoUrl: video?.path,
+    });
   }
 
   @Get()

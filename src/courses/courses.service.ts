@@ -45,13 +45,11 @@ export class CoursesService {
     return { message: `Course #${id} deleted successfully` };
   }
   async findOneModule(id: string) {
-    const course = await this.courseRepo.findOneBy({ id });
+    const course = await this.courseRepo.findOne({
+      where: { id },
+      relations: ['modules'],
+    });
     if (!course) throw new NotFoundException(`Course #${id} not found`);
     return course.modules;
-  }
-  async findOneCourse(id: string) {
-    const course = await this.courseRepo.findOneBy({ id });
-    if (!course) throw new NotFoundException(`Course #${id} not found`);
-    return course;
   }
 }

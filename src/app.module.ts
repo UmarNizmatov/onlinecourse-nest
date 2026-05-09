@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { JwtAccessGuard } from './auth/jwt-access.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Auth } from './auth/entities/auth.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CoursesModule } from './courses/courses.module';
 import { ModulesModule } from './modules/modules.module';
@@ -12,7 +13,6 @@ import { SubmissionModule } from './submission/submission.module';
 import { AssigmentModule } from './assigment/assigment.module';
 import { StudentCoursesModule } from './student_courses/student_courses.module';
 import { LessonModule } from './lesson/lesson.module';
-import { ModulesModule } from './modules/modules.module';
 
 @Module({
   imports: [
@@ -24,10 +24,10 @@ import { ModulesModule } from './modules/modules.module';
       host: process.env.DB_HOST,
       database: process.env.DB_DATABASE,
       port: +process.env.DB_PORT!,
-      entities: [Auth],
       autoLoadEntities: true,
       synchronize: true,
     }),
+    AuthModule,
     CoursesModule,
     ModulesModule,
     LessonModule,
@@ -37,6 +37,12 @@ import { ModulesModule } from './modules/modules.module';
     ResultModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAccessGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -14,10 +14,9 @@ import { UpdateAssigmentDto } from './dto/update-assigment.dto';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { user_role } from 'src/auth/entities/role.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
+
 
 @Controller('assigment')
-@UseGuards(JwtAccessGuard)
 export class AssigmentController {
   constructor(private readonly assigmentService: AssigmentService) {}
   @Post(':moduleId/add_assignment')

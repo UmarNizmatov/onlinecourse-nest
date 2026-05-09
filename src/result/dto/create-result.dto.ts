@@ -1,18 +1,10 @@
-import {
-  IsOptional,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsNumber, IsUUID, Min } from 'class-validator';
 
-export class CreateSubmissionDto {
+export class CreateResultDto {
   @IsUUID()
-  assignmentId!: string;
+  courseId!: string;
 
-  @IsOptional()
-  @IsString()
-  content?: string;
-
-  @IsOptional()
-  @IsString()
-  fileUrl?: string;
+  @IsNumber()
+  @Min(0)
+  totalScore!: number;
 }

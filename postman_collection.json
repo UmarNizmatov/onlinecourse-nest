@@ -1,0 +1,459 @@
+{
+  "info": {
+    "name": "Online Course Management System",
+    "description": "Full REST API for the NestJS LMS backend. Run 'Auth - Login' first — it auto-saves {{accessToken}} via test script.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl",      "value": "http://localhost:3000" },
+    { "key": "accessToken",  "value": "" },
+    { "key": "courseId",     "value": "" },
+    { "key": "moduleId",     "value": "" },
+    { "key": "lessonId",     "value": "" },
+    { "key": "assignmentId", "value": "" },
+    { "key": "submissionId", "value": "" },
+    { "key": "enrollmentId", "value": "" },
+    { "key": "teacherId",    "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"student\"\n}"
+            },
+            "description": "role: student | teacher | admin (optional, defaults to student)"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', res.accessToken);",
+                  "  console.log('accessToken saved:', res.accessToken.substring(0, 20) + '...');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "description": "Auto-saves accessToken to {{accessToken}} collection variable via test script."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
+            "description": "Uses refreshToken from httpOnly cookie set during login."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "item": [
+        {
+          "name": "Create Course",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/courses", "host": ["{{baseUrl}}"], "path": ["courses"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Full-Stack Web Development\",\n  \"description\": \"Learn modern web development from scratch\",\n  \"price\": 149,\n  \"teacherId\": \"{{teacherId}}\",\n  \"category\": \"Web Development\",\n  \"level\": \"intermediate\"\n}"
+            },
+            "description": "level: beginner | intermediate | advanced. Requires teacher or admin role."
+          }
+        },
+        {
+          "name": "Get All Courses",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/courses", "host": ["{{baseUrl}}"], "path": ["courses"] },
+            "description": "Public — no auth required."
+          }
+        },
+        {
+          "name": "Get Course Modules",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/courses/{{courseId}}/modules", "host": ["{{baseUrl}}"], "path": ["courses", "{{courseId}}", "modules"] },
+            "description": "Public — returns all modules for a course."
+          }
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/courses/{{courseId}}", "host": ["{{baseUrl}}"], "path": ["courses", "{{courseId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"name\": \"Updated Course Name\",\n  \"price\": 199\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/courses/{{courseId}}", "host": ["{{baseUrl}}"], "path": ["courses", "{{courseId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Modules",
+      "item": [
+        {
+          "name": "Create Module",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/modules/new", "host": ["{{baseUrl}}"], "path": ["modules", "new"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Introduction to HTML & CSS\",\n  \"courseId\": \"{{courseId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Submit Assignment (student)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/modules/{{moduleId}}/assignment", "host": ["{{baseUrl}}"], "path": ["modules", "{{moduleId}}", "assignment"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"content\": \"My assignment answer goes here\"\n}"
+            },
+            "description": "Student submits their work for the assignment attached to this module."
+          }
+        },
+        {
+          "name": "Get All Modules",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/modules", "host": ["{{baseUrl}}"], "path": ["modules"] }
+          }
+        },
+        {
+          "name": "Get Module by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/modules/{{moduleId}}", "host": ["{{baseUrl}}"], "path": ["modules", "{{moduleId}}"] },
+            "description": "Returns module with lessons and assignments relations."
+          }
+        },
+        {
+          "name": "Get Module Lessons",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/modules/{{moduleId}}/lessons", "host": ["{{baseUrl}}"], "path": ["modules", "{{moduleId}}", "lessons"] }
+          }
+        },
+        {
+          "name": "Update Module",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/modules/{{moduleId}}", "host": ["{{baseUrl}}"], "path": ["modules", "{{moduleId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Updated Module Title\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Module",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/modules/{{moduleId}}", "host": ["{{baseUrl}}"], "path": ["modules", "{{moduleId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lessons",
+      "item": [
+        {
+          "name": "Create Lesson",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/lesson", "host": ["{{baseUrl}}"], "path": ["lesson"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Getting Started with HTML\",\n  \"content\": \"In this lesson we cover the basics of HTML...\",\n  \"videoUrl\": \"https://example.com/video.mp4\",\n  \"moduleId\": \"{{moduleId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Lessons",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/lesson", "host": ["{{baseUrl}}"], "path": ["lesson"] }
+          }
+        },
+        {
+          "name": "Get Lesson by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/lesson/{{lessonId}}", "host": ["{{baseUrl}}"], "path": ["lesson", "{{lessonId}}"] }
+          }
+        },
+        {
+          "name": "Update Lesson",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/lesson/{{lessonId}}", "host": ["{{baseUrl}}"], "path": ["lesson", "{{lessonId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Updated Lesson Title\",\n  \"content\": \"Updated content here\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Lesson",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/lesson/{{lessonId}}", "host": ["{{baseUrl}}"], "path": ["lesson", "{{lessonId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Enrollments",
+      "item": [
+        {
+          "name": "Enroll in Course",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/student-courses", "host": ["{{baseUrl}}"], "path": ["student-courses"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"courseId\": \"{{courseId}}\"\n}"
+            },
+            "description": "Enrolls the authenticated student into a course."
+          }
+        },
+        {
+          "name": "Get My Enrollments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/student-courses", "host": ["{{baseUrl}}"], "path": ["student-courses"] },
+            "description": "Returns all enrollments for the authenticated user."
+          }
+        },
+        {
+          "name": "Get Enrollment by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/student-courses/{{enrollmentId}}", "host": ["{{baseUrl}}"], "path": ["student-courses", "{{enrollmentId}}"] }
+          }
+        },
+        {
+          "name": "Update Enrollment",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/student-courses/{{enrollmentId}}", "host": ["{{baseUrl}}"], "path": ["student-courses", "{{enrollmentId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{}"
+            }
+          }
+        },
+        {
+          "name": "Delete Enrollment",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/student-courses/{{enrollmentId}}", "host": ["{{baseUrl}}"], "path": ["student-courses", "{{enrollmentId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assignments",
+      "item": [
+        {
+          "name": "Add Assignment to Module",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/assigment/{{moduleId}}/add_assignment", "host": ["{{baseUrl}}"], "path": ["assigment", "{{moduleId}}", "add_assignment"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Build a Todo App\",\n  \"description\": \"Create a todo application using the concepts learned in this module\",\n  \"maxScore\": 100\n}"
+            },
+            "description": "Requires teacher or admin role."
+          }
+        },
+        {
+          "name": "Get All Assignments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/assigment", "host": ["{{baseUrl}}"], "path": ["assigment"] }
+          }
+        },
+        {
+          "name": "Get Assignment by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/assigment/{{assignmentId}}", "host": ["{{baseUrl}}"], "path": ["assigment", "{{assignmentId}}"] }
+          }
+        },
+        {
+          "name": "Update Assignment",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/assigment/{{assignmentId}}", "host": ["{{baseUrl}}"], "path": ["assigment", "{{assignmentId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"title\": \"Updated Assignment Title\",\n  \"maxScore\": 150\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Assignment",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/assigment/{{assignmentId}}", "host": ["{{baseUrl}}"], "path": ["assigment", "{{assignmentId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Submissions",
+      "item": [
+        {
+          "name": "Create Submission (with file)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/submission", "host": ["{{baseUrl}}"], "path": ["submission"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "assignmentId", "value": "{{assignmentId}}", "type": "text", "description": "UUID of the assignment" },
+                { "key": "content",      "value": "My submission answer text", "type": "text", "description": "Optional text content" },
+                { "key": "file",         "type": "file", "src": null, "description": "Optional file attachment" }
+              ]
+            },
+            "description": "Multipart form-data. File upload is optional."
+          }
+        },
+        {
+          "name": "Check Submission (teacher)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/submission/{{submissionId}}/check", "host": ["{{baseUrl}}"], "path": ["submission", "{{submissionId}}", "check"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"score\": 85\n}"
+            },
+            "description": "Teacher-only route. Sets the score for a submission."
+          }
+        },
+        {
+          "name": "Get All Submissions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/submission", "host": ["{{baseUrl}}"], "path": ["submission"] }
+          }
+        },
+        {
+          "name": "Get Submission by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/submission/{{submissionId}}", "host": ["{{baseUrl}}"], "path": ["submission", "{{submissionId}}"] }
+          }
+        },
+        {
+          "name": "Update Submission",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/submission/{{submissionId}}", "host": ["{{baseUrl}}"], "path": ["submission", "{{submissionId}}"] },
+            "body": {
+              "mode": "raw",
+              "options": { "raw": { "language": "json" } },
+              "raw": "{\n  \"content\": \"Updated submission content\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Submission",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/submission/{{submissionId}}", "host": ["{{baseUrl}}"], "path": ["submission", "{{submissionId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Results",
+      "item": [
+        {
+          "name": "Get My Results",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/results", "host": ["{{baseUrl}}"], "path": ["results"] },
+            "description": "Returns all results for the authenticated user with course relations."
+          }
+        }
+      ]
+    }
+  ]
+}

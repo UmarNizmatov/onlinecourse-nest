@@ -24,7 +24,7 @@ export class SubmissionService {
     const submission = this.submissionRepo.create({
       ...createSubmissionDto,
       user: user,
-      fileUrl: file.path ? file.path : undefined,
+      fileUrl: file?.path ?? undefined,
     });
     await this.submissionRepo.save(submission);
     return submission;
@@ -49,7 +49,7 @@ export class SubmissionService {
     return data;
   }
   async checkSubmission(id: string, score: number) {
-    const submission = await this.submissionRepo.findOneBy({ id });
+    const submission = await this.submissionRepo.findOne({ where: { id }, relations: ['assignment'] });
     if (!submission) throw new BadRequestException('Submission not found');
     const assignment = submission.assignment;
     if (!assignment) throw new BadRequestException('Assignment not found');

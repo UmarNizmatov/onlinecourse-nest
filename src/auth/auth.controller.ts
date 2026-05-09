@@ -1,11 +1,7 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Res,
   UseGuards,
   Req,
@@ -15,15 +11,19 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { loginAuthDto } from './dto/login-auth.dto';
 import type { Response, Request } from 'express';
 import { AuthRefreshTokenGuard } from './authrefreshToken.guard';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('register')
   register(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.register(createAuthDto);
   }
+
+  @Public()
   @Post('login')
   async login(
     @Body() loginAuthDto: loginAuthDto,
@@ -38,6 +38,8 @@ export class AuthController {
     });
     return { accessToken };
   }
+
+  @Public()
   @UseGuards(AuthRefreshTokenGuard)
   @Post('refresh')
   async refresh(@Req() req: Request) {
