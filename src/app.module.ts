@@ -7,6 +7,7 @@ import { Auth } from './auth/entities/auth.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CoursesModule } from './courses/courses.module';
 import { ModulesModule } from './modules/modules.module';
+import { LessonModule } from './lesson/lesson.module';
 import { ModulesModule } from './modules/modules.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { ModulesModule } from './modules/modules.module';
     }),
     CoursesModule,
     ModulesModule,
+    LessonModule,
   ],
   controllers: [AppController],
   providers: [AppService],
