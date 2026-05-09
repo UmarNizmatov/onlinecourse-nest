@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -13,7 +13,9 @@ export class CoursesService {
 
   async create(createCourseDto: CreateCourseDto): Promise<Course> {
     const course = this.courseRepo.create(createCourseDto);
-    return this.courseRepo.save(course);
+    if (!course) throw new InternalServerErrorException('Course creation failed');
+    this.courseRepo.save(course);
+    return course;
   }
 
   async findAll(): Promise<Course[]> {

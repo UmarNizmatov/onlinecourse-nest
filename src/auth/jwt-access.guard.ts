@@ -23,7 +23,7 @@ export class JwtAccessGuard implements CanActivate {
     if (!authHeader?.startsWith('Bearer '))
       throw new UnauthorizedException('Access token not found');
 
-    const token = authHeader.slice(7);
+    const token = authHeader.split('Bearer ')[1];
 
     try {
       const payload = await this.jwtService.verifyAsync(token, {
