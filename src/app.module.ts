@@ -7,6 +7,8 @@ import { Auth } from './auth/entities/auth.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CoursesModule } from './courses/courses.module';
 import { ModulesModule } from './modules/modules.module';
+import { SubmissionModule } from './submission/submission.module';
+import { AssigmentModule } from './assigment/assigment.module';
 import { StudentCoursesModule } from './student_courses/student_courses.module';
 import { LessonModule } from './lesson/lesson.module';
 import { ModulesModule } from './modules/modules.module';
@@ -29,6 +31,8 @@ import { ModulesModule } from './modules/modules.module';
     ModulesModule,
     LessonModule,
     StudentCoursesModule,
+    AssigmentModule,
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
