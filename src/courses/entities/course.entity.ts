@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Module } from 'src/modules/entities/module.entity';
 import { Auth } from 'src/auth/entities/auth.entity';
+import { Enrollment } from 'src/student_courses/entities/enrollment.entity';
 
 export enum CourseLevel {
   beginner = 'beginner',
@@ -40,6 +41,6 @@ export class Course extends BaseEntity {
 
   @OneToMany(() => Module, (module) => module.course)
   modules!: Module[];
-  @ManyToOne(() => Auth, (auth) => auth.enrolledCourses)
-  student!: Auth;
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
+  enrollments!: Enrollment[];
 }

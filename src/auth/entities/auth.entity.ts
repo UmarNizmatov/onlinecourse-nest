@@ -4,6 +4,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { Course } from 'src/courses/entities/course.entity';
 
 import { user_role } from './role.enum';
+import { Enrollment } from 'src/student_courses/entities/enrollment.entity';
 
 @Entity('users')
 export class Auth extends BaseEntity {
@@ -29,6 +30,6 @@ export class Auth extends BaseEntity {
   @OneToMany(() => Course, (course) => course.teacher)
   courses!: Course[];
 
-  @OneToMany(() => Course, (course) => course.student)
-  enrolledCourses!: Course[];
+  @OneToMany(()=>Enrollment,(enrollment)=>enrollment.user)
+  enrollments!: Enrollment[];
 }
