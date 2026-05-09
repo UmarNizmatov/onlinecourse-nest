@@ -16,7 +16,7 @@ export class Course extends BaseEntity {
   description!: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  price!: number;
+  price!: number;ß
 
   @Column({ type: 'varchar' })
   teacher!: string;
@@ -26,4 +26,7 @@ export class Course extends BaseEntity {
 
   @Column({ type: 'enum', enum: CourseLevel, default: CourseLevel.beginner })
   level!: CourseLevel;
+  @Column({type:"varchar" })
+  modules!:string
+
 }

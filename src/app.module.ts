@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Auth } from './auth/entities/auth.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CoursesModule } from './courses/courses.module';
+import { ModulesModule } from './modules/modules.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CoursesModule } from './courses/courses.module';
       synchronize: true,
     }),
     CoursesModule,
+    ModulesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

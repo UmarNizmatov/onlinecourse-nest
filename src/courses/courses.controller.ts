@@ -31,6 +31,14 @@ export class CoursesController {
   findAll() {
     return this.coursesService.findAll();
   }
+  @Get(':id/:courseId/modules')
+  findOneModule(@Param('id') id: string) {
+    return this.coursesService.findOneModule(id);
+  }
+  @Get(':id/:courseId/modules')
+  findOneCourse(@Param('id') id: string) {
+    return this.coursesService.findOneCourse(id);
+  }
 
   @Put(':id')
   @UseGuards(JwtAccessGuard, RolesGuard)
