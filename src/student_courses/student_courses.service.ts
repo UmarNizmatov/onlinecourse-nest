@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStudentCourseDto } from './dto/create-student_course.dto';
 import { UpdateStudentCourseDto } from './dto/update-student_course.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class StudentCoursesService {
+  constructor(
+    @InjectRepository(Course)
+  ){}
   create(createStudentCourseDto: CreateStudentCourseDto) {
     return 'This action adds a new studentCourse';
   }
@@ -22,5 +26,8 @@ export class StudentCoursesService {
 
   remove(id: number) {
     return `This action removes a #${id} studentCourse`;
+  }
+  getUserCourses(userId: string) {
+
   }
 }

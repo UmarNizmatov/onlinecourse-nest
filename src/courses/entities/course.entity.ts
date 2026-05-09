@@ -1,4 +1,3 @@
-
 import { BaseEntity } from 'src/base.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
@@ -41,4 +40,6 @@ export class Course extends BaseEntity {
 
   @OneToMany(() => Module, (module) => module.course)
   modules!: Module[];
+  @ManyToOne(() => User, (user) => user.enrolledCourses)
+  student!: User;
 }

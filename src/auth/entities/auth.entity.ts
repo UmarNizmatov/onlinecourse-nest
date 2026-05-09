@@ -28,4 +28,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Course, (course) => course.teacher)
   courses!: Course[];
+
+  @OneToMany(() => Course, (course) => course.student)
+  enrolledCourses!: Course[];
 }
