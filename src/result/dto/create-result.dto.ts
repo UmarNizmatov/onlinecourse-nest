@@ -1,4 +1,8 @@
-import { IsOptional, IsString, IsUUID, IsNumber, Min } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateSubmissionDto {
   @IsUUID()
@@ -11,8 +15,4 @@ export class CreateSubmissionDto {
   @IsOptional()
   @IsString()
   fileUrl?: string;
-
-  @IsNumber()
-  @Min(0)
-  score?: number;
 }

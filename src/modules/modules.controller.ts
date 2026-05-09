@@ -44,15 +44,6 @@ export class ModulesController {
     const data = await this.modulesService.findOne(id);
     return data.lessons;
   }
-  @Post(':moduleId/assignment/:assignmentId')
-  exam(
-    @Body() assignmentDto: any,
-    @Param('moduleId') id: string,
-    @Req() req: Request,
-    @Param('assignmentId') assignmentId: string,
-  ) {
-    return this.modulesService.exam(id, assignmentDto, req.user!.id);
-  }
 
   @Patch(':id')
   @Roles(user_role.admin, user_role.teacher)

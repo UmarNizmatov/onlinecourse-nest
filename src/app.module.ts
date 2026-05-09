@@ -7,6 +7,7 @@ import { Auth } from './auth/entities/auth.entity';
 import { ConfigModule } from '@nestjs/config';
 import { CoursesModule } from './courses/courses.module';
 import { ModulesModule } from './modules/modules.module';
+import { ResultModule } from './result/result.module';
 import { SubmissionModule } from './submission/submission.module';
 import { AssigmentModule } from './assigment/assigment.module';
 import { StudentCoursesModule } from './student_courses/student_courses.module';
@@ -33,6 +34,7 @@ import { ModulesModule } from './modules/modules.module';
     StudentCoursesModule,
     AssigmentModule,
     SubmissionModule,
+    ResultModule,
   ],
   controllers: [AppController],
   providers: [AppService],

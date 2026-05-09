@@ -5,6 +5,7 @@ import { Course } from 'src/courses/entities/course.entity';
 
 import { user_role } from './role.enum';
 import { Enrollment } from 'src/student_courses/entities/enrollment.entity';
+import { Submission } from 'src/submission/entities/submission.entity';
 
 @Entity('users')
 export class Auth extends BaseEntity {
@@ -30,6 +31,9 @@ export class Auth extends BaseEntity {
   @OneToMany(() => Course, (course) => course.teacher)
   courses!: Course[];
 
-  @OneToMany(()=>Enrollment,(enrollment)=>enrollment.user)
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
   enrollments!: Enrollment[];
+
+  @OneToMany(() => Submission, (submission) => submission.user)
+  submissions!: Submission[];
 }

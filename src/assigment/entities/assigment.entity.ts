@@ -1,8 +1,8 @@
 import { BaseEntity } from 'src/base.entity';
 import { Module } from 'src/modules/entities/module.entity';
+import { Submission } from 'src/submission/entities/submission.entity';
 
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { Submission } from 'src/submissions/entities/submission.entity';
 
 @Entity('assignments')
 export class Assignment extends BaseEntity {
