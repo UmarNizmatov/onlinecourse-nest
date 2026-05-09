@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/base.entity';
 import { Course } from 'src/courses/entities/course.entity';
 
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { Lesson } from './lesson.entity';
+import { Lesson } from '../../lesson/entities/lesson.entity';
 
 @Entity('modules')
 export class Module extends BaseEntity {

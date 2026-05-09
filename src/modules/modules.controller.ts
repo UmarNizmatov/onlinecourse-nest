@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ModulesService } from './modules.service';
 import { CreateModuleDto } from './dto/create-module.dto';
@@ -16,7 +15,6 @@ import { JwtAccessGuard } from 'src/auth/jwt-access.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { user_role } from 'src/auth/entities/role.enum';
-import { FileInterceptor } from '@nestjs/platform-express/multer/interceptors/file.interceptor';
 
 @Controller('modules')
 @UseGuards(JwtAccessGuard)
@@ -26,9 +24,8 @@ export class ModulesController {
   @Post('/new')
   @UseGuards(RolesGuard)
   @Roles(user_role.admin, user_role.teacher)
-  @UseInterceptors(FileInterceptor('video'))
   create(@Body() createModuleDto: CreateModuleDto) {
-    return this.modulesService.create({createModuleDto,});
+    return this.modulesService.create(createModuleDto);
   }
 
   @Get()

@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Lesson } from './entities/lesson.entity';
+import { Repository } from 'typeorm/browser/repository/Repository.js';
 
 @Injectable()
 export class LessonService {
-  create(createLessonDto: CreateLessonDto) {
-    return 'This action adds a new lesson';
+  constructor(
+    @InjectRepository(Lesson) private lessonRepository: Repository<Lesson>,
+  ) {}
+  async create(createLessonDto: CreateLessonDto) {
+    const lesson = this.lessonRepository.create(createLessonDto);
+    if (!lesson)
+      throw new InternalServerErrorException('Lesson creation failed');
+    await this.lessonRepository.save(lesson);
+    return lesson;
   }
 
-  findAll() {
-    return `This action returns all lesson`;
+  async findAll() {
+    return await this.lessonRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} lesson`;
+  async findOne(id: string) {
+    const lesson = await this.lessonRepository.findOneBy({ id });
+    if (!lesson) throw new NotFoundException('Lesson not found');
+    return lesson;
   }
 
-  update(id: number, updateLessonDto: UpdateLessonDto) {
-    return `This action updates a #${id} lesson`;
+  async update(id: string, updateLessonDto: UpdateLessonDto) {
+    let lesson = await this.findOne(id);
+    lesson = { ...lesson, ...updateLessonDto };
+    await this.lessonRepository.save(lesson);
+    return lesson;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lesson`;
+  async remove(id: string) {
+    const lesson = await this.findOne(id);
+    await this.lessonRepository.remove(lesson);
+    return lesson;
   }
 }
