@@ -16,4 +16,5 @@ export class Module extends BaseEntity {
   lessons!: Lesson[];
   @OneToMany(() => Assignment, (assignment) => assignment.module)
   assignments!: Assignment[];
+  
 }
