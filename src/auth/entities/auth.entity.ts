@@ -6,7 +6,7 @@ import { Course } from 'src/courses/entities/course.entity';
 import { user_role } from './role.enum';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class Auth extends BaseEntity {
   @Column({ type: 'varchar' })
   name!: string;
 

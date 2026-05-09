@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { CreateStudentCourseDto } from './dto/create-student_course.dto';
 import { UpdateStudentCourseDto } from './dto/update-student_course.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Auth, Repository } from 'typeorm';
 
 @Injectable()
 export class StudentCoursesService {
   constructor(
-    @InjectRepository(Course)
+    @InjectRepository(Auth) private readonly authRepo: Repository<Auth>,
   ){}
   create(createStudentCourseDto: CreateStudentCourseDto) {
     return 'This action adds a new studentCourse';
