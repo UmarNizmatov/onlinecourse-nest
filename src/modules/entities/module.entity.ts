@@ -1,1 +1,16 @@
-export class Module {}
+import { BaseEntity } from 'src/base.entity';
+import { Course } from 'src/courses/entities/course.entity';
+
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Lesson } from './lesson.entity';
+
+@Entity('modules')
+export class Module extends BaseEntity {
+  @Column()
+  title!: string;
+
+  @ManyToOne(() => Course, (course) => course.modules)
+  course!: Course;
+  @OneToMany(() => Lesson, (lesson) => lesson.module)
+  lessons!: Lesson[];
+}

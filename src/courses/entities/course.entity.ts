@@ -1,5 +1,9 @@
+
 import { BaseEntity } from 'src/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+
+import { Module } from 'src/modules/entities/module.entity';
+import { User } from 'src/auth/entities/auth.entity';
 
 export enum CourseLevel {
   beginner = 'beginner',
@@ -15,18 +19,26 @@ export class Course extends BaseEntity {
   @Column({ type: 'text' })
   description!: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
-  price!: number;ß
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+  })
+  price!: number;
 
-  @Column({ type: 'varchar' })
-  teacher!: string;
+  @ManyToOne(() => User, (user) => user.courses)
+  teacher!: User;
 
   @Column({ type: 'varchar' })
   category!: string;
 
-  @Column({ type: 'enum', enum: CourseLevel, default: CourseLevel.beginner })
+  @Column({
+    type: 'enum',
+    enum: CourseLevel,
+    default: CourseLevel.beginner,
+  })
   level!: CourseLevel;
-  @Column({type:"varchar" })
-  modules!:string
 
+  @OneToMany(() => Module, (module) => module.course)
+  modules!: Module[];
 }
