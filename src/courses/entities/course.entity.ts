@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/base.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { Module } from 'src/modules/entities/module.entity';
-import { User } from 'src/auth/entities/auth.entity';
+import { Auth } from 'src/auth/entities/auth.entity';
 
 export enum CourseLevel {
   beginner = 'beginner',
@@ -25,8 +25,8 @@ export class Course extends BaseEntity {
   })
   price!: number;
 
-  @ManyToOne(() => User, (user) => user.courses)
-  teacher!: User;
+  @ManyToOne(() => Auth, (auth) => auth.courses)
+  teacher!: Auth;
 
   @Column({ type: 'varchar' })
   category!: string;
@@ -40,6 +40,6 @@ export class Course extends BaseEntity {
 
   @OneToMany(() => Module, (module) => module.course)
   modules!: Module[];
-  @ManyToOne(() => User, (user) => user.enrolledCourses)
-  student!: User;
+  @ManyToOne(() => Auth, (auth) => auth.enrolledCourses)
+  student!: Auth;
 }
