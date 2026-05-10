@@ -10,7 +10,9 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
@@ -30,7 +32,7 @@ export class LessonController {
   @UseInterceptors(
     FileInterceptor('video', {
       limits: {
-        fileSize: 100 * 1024 * 1024, // 100 MB
+        fileSize: 100 * 1024 * 1024, 
       },
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.startsWith('video/')) {
@@ -55,8 +57,8 @@ export class LessonController {
   }
 
   @Get()
-  findAll() {
-    return this.lessonService.findAll();
+  findAll(@Req() req: Request) {
+    return this.lessonService.findAll(req.user!.id, req.user!.role);
   }
 
   @Get(':id')

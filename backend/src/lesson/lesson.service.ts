@@ -22,8 +22,14 @@ export class LessonService {
     return lesson;
   }
 
-  async findAll() {
-    return await this.lessonRepository.find();
+  async findAll(userId: string, role: string) {
+    if (role === 'teacher') {
+      return this.lessonRepository.find({
+        where: { module: { course: { teacher: { id: userId } } } },
+        relations: ['module', 'module.course'],
+      });
+    }
+    return this.lessonRepository.find();
   }
 
   async findOne(id: string) {

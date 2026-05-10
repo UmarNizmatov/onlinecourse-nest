@@ -40,8 +40,14 @@ export class AssigmentService {
     return data;
   }
 
-  async findAll() {
-    return await this.assigmentRepo.find();
+  async findAll(userId: string, role: string) {
+    if (role === 'teacher') {
+      return this.assigmentRepo.find({
+        where: { module: { course: { teacher: { id: userId } } } },
+        relations: ['module', 'module.course'],
+      });
+    }
+    return this.assigmentRepo.find();
   }
 
   async findOne(id: string) {

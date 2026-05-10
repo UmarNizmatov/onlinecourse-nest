@@ -5,6 +5,9 @@ export const register = (data) => api.post('/auth/register', data);
 export const login = (data) => api.post('/auth/login', data);
 export const refreshToken = () => api.post('/auth/refresh');
 
+// Auth
+export const getTeachers = () => api.get('/auth/teachers');
+
 // Courses
 export const getCourses = () => api.get('/courses');
 export const getCourse = (id) => api.get(`/courses/${id}`);

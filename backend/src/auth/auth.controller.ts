@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   Res,
@@ -45,5 +46,10 @@ export class AuthController {
   async refresh(@Req() req: Request) {
     const accessToken = await this.authService.refresh(req.user!);
     return { accessToken };
+  }
+
+  @Get('teachers')
+  getTeachers() {
+    return this.authService.getTeachers();
   }
 }

@@ -102,24 +102,34 @@ export default function TeacherDashboard() {
 
       {/* Overview */}
       {tab === 'overview' && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 anim-up">
-          {[
-            { label: "Bo'limlar",    value: modules.length,    grad: 'strip-teal',   Icon: BookOpen },
-            { label: 'Darslar',      value: lessons.length,    grad: 'strip-purple', Icon: PlayCircle },
-            { label: 'Topshiriqlar', value: assignments.length, grad: 'strip-orange', Icon: ClipboardList },
-            { label: 'Kutilayapti',  value: pending.length,    grad: 'strip-green',  Icon: Clock },
-          ].map(({ label, value, grad, Icon }) => (
-            <div key={label} className="card p-5 flex items-center gap-3 hover:shadow-md transition-shadow">
-              <div className={`w-11 h-11 ${grad} rounded-2xl flex items-center justify-center shadow-sm shrink-0`}>
-                <Icon size={19} className="text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-extrabold text-slate-800">{value}</p>
-                <p className="text-xs text-slate-500">{label}</p>
-              </div>
+        courses.length === 0 ? (
+          <div className="card p-14 text-center anim-up">
+            <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+              <BookOpen size={26} className="text-slate-300" />
             </div>
-          ))}
-        </div>
+            <p className="font-semibold text-slate-500">Hozircha hech qaysi kursda o'qitmayapsiz</p>
+            <p className="text-sm text-slate-400 mt-1">Admin sizni kursga biriktirishi kerak</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 anim-up">
+            {[
+              { label: "Bo'limlar",    value: modules.length,    grad: 'strip-teal',   Icon: BookOpen },
+              { label: 'Darslar',      value: lessons.length,    grad: 'strip-purple', Icon: PlayCircle },
+              { label: 'Topshiriqlar', value: assignments.length, grad: 'strip-orange', Icon: ClipboardList },
+              { label: 'Kutilayapti',  value: pending.length,    grad: 'strip-green',  Icon: Clock },
+            ].map(({ label, value, grad, Icon }) => (
+              <div key={label} className="card p-5 flex items-center gap-3 hover:shadow-md transition-shadow">
+                <div className={`w-11 h-11 ${grad} rounded-2xl flex items-center justify-center shadow-sm shrink-0`}>
+                  <Icon size={19} className="text-white" />
+                </div>
+                <div>
+                  <p className="text-2xl font-extrabold text-slate-800">{value}</p>
+                  <p className="text-xs text-slate-500">{label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
       )}
 
       {/* Modules */}

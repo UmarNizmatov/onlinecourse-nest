@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCourses, createCourse, updateCourse, deleteCourse } from '../../api';
+import { getCourses, createCourse, updateCourse, deleteCourse, getTeachers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Spinner, { InlineSpinner } from '../../components/Spinner';
 import Modal from '../../components/Modal';
@@ -16,6 +16,7 @@ const EMPTY = { name: '', description: '', price: 0, teacherId: '', category: ''
 export default function AdminDashboard() {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
@@ -24,7 +25,10 @@ export default function AdminDashboard() {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const load = () => getCourses().then(({ data }) => setCourses(data)).catch(() => {}).finally(() => setLoading(false));
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    getTeachers().then(({ data }) => setTeachers(data)).catch(() => {});
+  }, []);
 
   const openCreate = () => { setEditTarget(null); setForm(EMPTY); setShowModal(true); };
   const openEdit = (c) => {
@@ -184,11 +188,16 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Narx (so'm)</label>
-                <input type="number" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="0 = bepul" className={INPUT} />
+                <input type="number" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} placeholder="0 = bepul" className={INPUT} />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">O'qituvchi UUID</label>
-                <input type="text" value={form.teacherId} onChange={(e) => setForm({ ...form, teacherId: e.target.value })} placeholder="UUID" className={INPUT} />
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">O'qituvchi *</label>
+                <select required value={form.teacherId} onChange={(e) => setForm({ ...form, teacherId: e.target.value })} className={SELECT}>
+                  <option value="">O'qituvchi tanlang</option>
+                  {teachers.map((t) => (
+                    <option key={t.id} value={t.id}>{t.name} ({t.email})</option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="flex gap-3 pt-1">

@@ -44,8 +44,8 @@ export class ModulesController {
   }
 
   @Get()
-  findAll() {
-    return this.modulesService.findAll();
+  findAll(@Req() req: Request) {
+    return this.modulesService.findAll(req.user!.id, req.user!.role);
   }
 
   @Get(':id')

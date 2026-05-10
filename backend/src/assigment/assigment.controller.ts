@@ -7,7 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { AssigmentService } from './assigment.service';
 import { CreateAssigmentDto } from './dto/create-assigment.dto';
 import { UpdateAssigmentDto } from './dto/update-assigment.dto';
@@ -32,8 +34,8 @@ export class AssigmentController {
   }
 
   @Get()
-  findAll() {
-    return this.assigmentService.findAll();
+  findAll(@Req() req: Request) {
+    return this.assigmentService.findAll(req.user!.id, req.user!.role);
   }
 
   @Get(':id')

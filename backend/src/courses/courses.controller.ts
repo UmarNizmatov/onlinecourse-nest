@@ -15,6 +15,7 @@ import { user_role } from 'src/auth/entities/role.enum';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { CourseAccessGuard } from './course-access.guard';
 
 @Controller('courses')
 export class CoursesController {
@@ -33,7 +34,7 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
-  @Public()
+  @UseGuards(CourseAccessGuard)
   @Get(':courseId/modules')
   findModules(@Param('courseId') id: string) {
     return this.coursesService.findOneModule(id);

@@ -59,8 +59,8 @@ export class SubmissionController {
   }
 
   @Get()
-  findAll() {
-    return this.submissionService.findAll();
+  findAll(@Req() req: Request) {
+    return this.submissionService.findAll(req.user!.id, req.user!.role);
   }
 
   @Get(':id')

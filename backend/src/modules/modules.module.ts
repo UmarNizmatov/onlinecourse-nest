@@ -9,6 +9,7 @@ import { Auth } from 'src/auth/entities/auth.entity';
 import { Course } from 'src/courses/entities/course.entity';
 import { Enrollment } from 'src/student_courses/entities/enrollment.entity';
 import { ModulesAccessGuard } from './modules-access.guard';
+import { Result } from 'src/result/entities/result.entity';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ModulesAccessGuard } from './modules-access.guard';
       Auth,
       Course,
       Enrollment,
+      Result,
     ]),
   ],
   controllers: [ModulesController],

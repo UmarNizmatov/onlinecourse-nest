@@ -30,11 +30,14 @@ export class SubmissionService {
     return submission;
   }
 
-  findAll() {
-    const data = this.submissionRepo.find({
-      relations: ['user', 'assignment'],
-    });
-    return data;
+  findAll(userId: string, role: string) {
+    if (role === 'teacher') {
+      return this.submissionRepo.find({
+        where: { assignment: { module: { course: { teacher: { id: userId } } } } },
+        relations: ['user', 'assignment'],
+      });
+    }
+    return this.submissionRepo.find({ relations: ['user', 'assignment'] });
   }
 
   findOne(id: string) {

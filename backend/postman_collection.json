@@ -79,6 +79,15 @@
             "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
             "description": "Uses refreshToken from httpOnly cookie set during login."
           }
+        },
+        {
+          "name": "Get All Teachers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/teachers", "host": ["{{baseUrl}}"], "path": ["auth", "teachers"] },
+            "description": "Returns list of all users with role=teacher (id, name, email). Requires auth."
+          }
         }
       ]
     },
@@ -111,10 +120,9 @@
         {
           "name": "Get Course Modules",
           "request": {
-            "auth": { "type": "noauth" },
             "method": "GET",
             "url": { "raw": "{{baseUrl}}/courses/{{courseId}}/modules", "host": ["{{baseUrl}}"], "path": ["courses", "{{courseId}}", "modules"] },
-            "description": "Public — returns all modules for a course."
+            "description": "Requires auth. Accessible by: admin (any course), teacher (own course), enrolled student."
           }
         },
         {
@@ -166,7 +174,7 @@
               "options": { "raw": { "language": "json" } },
               "raw": "{\n  \"content\": \"My assignment answer goes here\"\n}"
             },
-            "description": "Student submits their work for the assignment attached to this module."
+            "description": "Student submits their work for the assignment attached to this module. Automatically creates a Result record (totalScore: 0) if one does not exist yet."
           }
         },
         {
@@ -220,13 +228,18 @@
           "name": "Create Lesson",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [],
             "url": { "raw": "{{baseUrl}}/lesson", "host": ["{{baseUrl}}"], "path": ["lesson"] },
             "body": {
-              "mode": "raw",
-              "options": { "raw": { "language": "json" } },
-              "raw": "{\n  \"title\": \"Getting Started with HTML\",\n  \"content\": \"In this lesson we cover the basics of HTML...\",\n  \"videoUrl\": \"https://example.com/video.mp4\",\n  \"moduleId\": \"{{moduleId}}\"\n}"
-            }
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title",    "value": "Getting Started with HTML", "type": "text" },
+                { "key": "content",  "value": "In this lesson we cover the basics of HTML...", "type": "text" },
+                { "key": "moduleId", "value": "{{moduleId}}", "type": "text" },
+                { "key": "video",    "type": "file", "src": null, "description": "Optional video file (mp4, webm, etc.)" }
+              ]
+            },
+            "description": "Multipart form-data. Video upload is optional. Requires teacher or admin role."
           }
         },
         {
@@ -340,7 +353,16 @@
           "name": "Get All Assignments",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/assigment", "host": ["{{baseUrl}}"], "path": ["assigment"] }
+            "url": { "raw": "{{baseUrl}}/assigment", "host": ["{{baseUrl}}"], "path": ["assigment"] },
+            "description": "Teacher: returns only assignments for their courses. Admin: returns all."
+          }
+        },
+        {
+          "name": "Get Assignments by Module",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/assigment/module/{{moduleId}}", "host": ["{{baseUrl}}"], "path": ["assigment", "module", "{{moduleId}}"] },
+            "description": "Returns all assignments for the specified module."
           }
         },
         {

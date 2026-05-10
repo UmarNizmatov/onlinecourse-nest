@@ -12,6 +12,7 @@ import { Submission } from 'src/submission/entities/submission.entity';
 import { Assignment } from 'src/assigment/entities/assigment.entity';
 import { Auth } from 'src/auth/entities/auth.entity';
 import { Course } from 'src/courses/entities/course.entity';
+import { Result } from 'src/result/entities/result.entity';
 
 @Injectable()
 export class ModulesService {
@@ -21,6 +22,7 @@ export class ModulesService {
     @InjectRepository(Assignment) private readonly assignmentRepo: Repository<Assignment>,
     @InjectRepository(Auth) private readonly authRepo: Repository<Auth>,
     @InjectRepository(Course) private readonly courseRepo: Repository<Course>,
+    @InjectRepository(Result) private readonly resultRepo: Repository<Result>,
   ) {}
 
   async create(createModuleDto: CreateModuleDto) {
@@ -37,8 +39,14 @@ export class ModulesService {
     return module;
   }
 
-  async findAll() {
-    return await this.moduleRepo.find();
+  async findAll(userId: string, role: string) {
+    if (role === 'teacher') {
+      return this.moduleRepo.find({
+        where: { course: { teacher: { id: userId } } },
+        relations: ['course'],
+      });
+    }
+    return this.moduleRepo.find({ relations: ['course'] });
   }
 
   async findOne(id: string) {
@@ -66,12 +74,24 @@ export class ModulesService {
   async submitAssignment(moduleId: string, userId: string, content?: string) {
     const assignment = await this.assignmentRepo.findOne({
       where: { module: { id: moduleId } },
+      relations: ['module', 'module.course'],
     });
     if (!assignment)
       throw new NotFoundException(`No assignment found for module #${moduleId}`);
     const user = await this.authRepo.findOneBy({ id: userId });
     if (!user) throw new NotFoundException('User not found');
     const submission = this.submissionRepo.create({ assignment, user, content });
-    return this.submissionRepo.save(submission);
+    await this.submissionRepo.save(submission);
+
+    const course = assignment.module.course;
+    const existingResult = await this.resultRepo.findOne({
+      where: { user: { id: userId }, course: { id: course.id } },
+    });
+    if (!existingResult) {
+      const result = this.resultRepo.create({ user, course, totalScore: 0 });
+      await this.resultRepo.save(result);
+    }
+
+    return submission;
   }
 }

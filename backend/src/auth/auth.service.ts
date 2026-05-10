@@ -4,6 +4,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { loginAuthDto } from './dto/login-auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
+import { user_role } from './entities/role.enum';
 import { Repository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -63,6 +64,10 @@ export class AuthService {
       expiresIn: '35m',
     });
     return accessToken;
+  }
+
+  async getTeachers() {
+    return this.authRepo.find({ where: { role: user_role.teacher }, select: ['id', 'name', 'email'] });
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {

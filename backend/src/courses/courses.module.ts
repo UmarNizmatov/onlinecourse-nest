@@ -7,13 +7,15 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
 import { Course } from './entities/course.entity';
+import { Enrollment } from 'src/student_courses/entities/enrollment.entity';
+import { CourseAccessGuard } from './course-access.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Course, Auth]),
+    TypeOrmModule.forFeature([Course, Auth, Enrollment]),
     JwtModule.register({}),
   ],
   controllers: [CoursesController],
-  providers: [CoursesService, JwtAccessGuard, RolesGuard],
+  providers: [CoursesService, JwtAccessGuard, RolesGuard, CourseAccessGuard],
 })
 export class CoursesModule {}
