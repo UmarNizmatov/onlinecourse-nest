@@ -10,6 +10,7 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
@@ -25,7 +26,23 @@ export class SubmissionController {
   constructor(private readonly submissionService: SubmissionService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: 100 * 1024 * 1024, 
+      },
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.startsWith('application/')) {
+          return cb(
+            new BadRequestException('Можно загружать только файлы'),
+            false,
+          );
+        }
+
+        cb(null, true);
+      },
+    }),
+  )
   create(
     @Body() createSubmissionDto: CreateSubmissionDto,
     @Req() req: Request,

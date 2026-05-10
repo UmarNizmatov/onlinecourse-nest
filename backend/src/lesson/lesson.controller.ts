@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
@@ -26,7 +27,23 @@ export class LessonController {
   @Post()
   @UseGuards(RolesGuard)
   @Roles(user_role.admin, user_role.teacher)
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(
+    FileInterceptor('video', {
+      limits: {
+        fileSize: 100 * 1024 * 1024, // 100 MB
+      },
+      fileFilter: (req, file, cb) => {
+        if (!file.mimetype.startsWith('video/')) {
+          return cb(
+            new BadRequestException('Можно загружать только видео'),
+            false,
+          );
+        }
+
+        cb(null, true);
+      },
+    }),
+  )
   create(
     @Body() createLessonDto: CreateLessonDto,
     @UploadedFile() video: Express.Multer.File,
