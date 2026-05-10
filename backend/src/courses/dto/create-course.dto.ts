@@ -1,0 +1,26 @@
+import { IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID, Min } from 'class-validator';
+import { CourseLevel } from '../entities/course.entity';
+
+export class CreateCourseDto {
+  @IsString()
+  @IsNotEmpty()
+  name!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description!: string;
+
+  @IsNumber()
+  @Min(0)
+  price!: number;
+
+  @IsUUID()
+  teacherId!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  category!: string;
+
+  @IsEnum(CourseLevel)
+  level!: CourseLevel;
+}

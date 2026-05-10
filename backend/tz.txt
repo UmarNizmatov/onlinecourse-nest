@@ -1,0 +1,181 @@
+🎓 Imtihon topshirig‘i: Online Kurslarni Boshqarish Tizimi
+
+✅ Maqsad
+Siz mustaqil ravishda NestJS asosida Online Kurslarni Boshqarish Tizimi backend qismini ishlab chiqasiz. Ushbu tizim foydalanuvchilarga kurslarga yozilish, mashg‘ulotlarni ko‘rish va topshiriqlarni bajarish imkoniyatini beradi. Admin esa kurslarni boshqaradi.
+
+🕒 Umumiy vaqt: 4 kun
+
+🗂️ Texnik talablar
+1️⃣ Texnologiyalar
+Backend: NestJS (TypeScript bilan)
+
+
+Ma’lumotlar ombori: PostgreSQL
+
+
+ORM: TypeORM yoki Prisma
+
+
+Autentifikatsiya: JWT
+
+
+Konteynerizatsiya: Docker, docker-compose
+
+
+Versiya nazorati: Git + GitHub
+
+
+API test: Postman
+
+
+
+2️⃣ Asosiy funksiyalar
+📌 1-kun (Asosiy tayyorgarlik va autentifikatsiya)
+NestJS loyihasini yaratish (TypeScript bilan)
+
+
+PostgreSQL bilan bog‘lash (docker-compose tavsiya etiladi)
+
+
+Auth modulini yaratish:
+
+
+POST /auth/register — Foydalanuvchi (student) ro‘yxatdan o‘tadi.
+
+
+POST /auth/login — Foydalanuvchi tizimga kiradi.(2 ta token access and refresh ) refresh cookieda saqlansin)
+POST /auth/refresh - tokenni yangilash 
+
+
+JWT token orqali autentifikatsiya.
+
+
+User Entity/Schema:
+
+
+name, email (unikal), password (hashlangan), role (student yoki admin)
+
+
+
+📌 2-kun (Kurslar boshqaruvi)
+Courses modulini yaratish:
+
+
+GET /courses — Barcha kurslarni ko‘rish.
+
+
+POST /courses — Yangi kurs qo‘shish (faqat admin).
+
+
+PUT /courses/:id — Kursni o‘zgartirish (faqat admin).
+
+
+DELETE /courses/:id — Kursni o‘chirish (faqat admin).
+
+
+Course Entity/Schema:
+
+
+name, description, price, teacher, category, level
+
+
+
+📌 3-kun (Modullar va darslar, kursga yozilish)
+Modules va Lessons modullarini yaratish:
+
+
+GET /courses/:courseId/modules — Kursdagi modullarni ko‘rish.
+
+
+GET /modules/:moduleId/lessons — Moduldagi darslarni ko‘rish.
+
+
+Enrollment (Yozilish):
+
+
+Foydalanuvchi kursga yozilishi.
+
+
+Yozilgandan keyin modul va darslarga kirish imkoniyati bo‘lsin.
+
+
+Relationships:
+
+
+Kurs ➝ Modullar ➝ Darslar
+
+
+
+📌 4-kun (Topshiriqlar va natijalar)
+Assignments moduli:
+
+
+POST /modules/:moduleId/assignment — Foydalanuvchi topshiriq topshiradi.
+
+
+Results moduli:
+
+
+GET /results — Foydalanuvchi o‘z natijalarini ko‘radi.
+
+
+Baholash logikasi:
+
+
+Avtomatik yoki qo‘lda baholash (minimal logika yetarli).
+
+
+
+🔑 Texnik talablar (yakuniy)
+✅ Har bir qism uchun alohida NestJS modul yarating: auth, courses, modules, lessons, assignments, results,student_courses
+✅ TypeScript imkoniyatlarini to‘liq qo‘llang.
+✅ Barcha ish Docker orqali ishga tushsin: NestJS + PostgreSQL docker-compose bilan.
+✅ Kodingiz GitHub’da alohida branchlarda saqlansin.
+✅ Har bir o‘zgarish uchun commit qo‘shing (an’anaviy commit mesajlari bo‘lsin).
+✅ Postman’da barcha API routelarni tekshiring va .json eksport qiling.
+
+🎯 API Routelar (majburiy)
+Yo‘nalish
+Rout
+Auth
+POST /auth/register
+POST /auth/login
+POST /auth/refresh
+Courses
+GET /courses
+POST /courses (admin)
+PUT /courses/:id (admin)
+DELETE /courses/:id (admin)
+Modules & Lessons
+GET /courses/:courseId/modules
+GET /modules/:moduleId/lessons
+Assignments
+POST /modules/:moduleId/assignment
+Results
+GET /results
+
+
+📌 Baholash mezonlari
+Mezoni
+Ball
+Funksiyalar to‘liq ishlashi
+40 ball
+Kod sifati va NestJS arxitekturasi
+25 ball
+Docker orqali ishga tushishi
+20 ball
+Git branch va commitlar
+10 ball
+Postman testlari
+5 ball
+Jami:
+100 ball
+
+
+🎓 Topshiriladigan narsalar
+✅ GitHub link (yoki .zip)
+✅ Postman collection
+✅ Agar deploy qilsangiz (masalan, Railway, Render) — +10 ball bonus!
+
+🏁 Omad tilaymiz!
+
